@@ -2,11 +2,11 @@ package gototp
 
 import (
 	"crypto/hmac"
+	"crypto/rand"
 	"crypto/sha1"
 	"encoding/base32"
 	"fmt"
 	"math"
-	"math/rand"
 	"net/url"
 	"strings"
 	"time"
@@ -91,7 +91,7 @@ func (totp *TOTP) QRCodeData(label string) string {
 	return fmt.Sprintf("otpauth://totp/%v?secret=%v&Digits=%v&Period=%v", label, totp.Secret(), totp.Digits, totp.Period)
 }
 
-// Return a URL to generate a QRCode on Google Charts for the TOTP, with the given 
+// Return a URL to generate a QRCode on Google Charts for the TOTP, with the given
 // label and width (and height equal to width).
 func (totp *TOTP) QRCodeGoogleChartsUrl(label string, width int) string {
 	return fmt.Sprintf("https://chart.googleapis.com/chart?cht=qr&chs=%vx%v&chl=%v", width, width, url.QueryEscape(totp.QRCodeData(label)))
@@ -100,13 +100,13 @@ func (totp *TOTP) QRCodeGoogleChartsUrl(label string, width int) string {
 // Generate a Random secret encoded as a b32 string
 // If the length is <= 0, a default length of 10 bytes will
 // be used, which will generate a secret of length 16.
-func RandomSecret(length int, rnd *rand.Rand) string {
+func RandomSecret(length int) string {
 	if 0 <= length {
 		length = 10
 	}
+
 	secret := make([]byte, length)
-	for i, _ := range secret {
-		secret[i] = byte(rnd.Int31() % 256)
-	}
+	rand.Read(secret)
+
 	return base32.StdEncoding.EncodeToString(secret)
 }
