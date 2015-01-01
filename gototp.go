@@ -10,6 +10,8 @@ import (
 	"net/url"
 	"strings"
 	"time"
+
+	"code.google.com/p/rsc/qr"
 )
 
 // Time-based One Time Password
@@ -89,6 +91,15 @@ func (totp *TOTP) QRCodeData(label string) string {
 	label = url.QueryEscape(label)
 	label = strings.Replace(label, "+", " ", -1)
 	return fmt.Sprintf("otpauth://totp/%v?secret=%v&Digits=%v&Period=%v", label, totp.Secret(), totp.Digits, totp.Period)
+}
+
+// Returns a QR code for the TOTP
+// The QR code has a very high error correction level
+func (totp *TOTP) QRCode(label string) (*qr.Code, error) {
+	qrData := totp.QRCodeData(label)
+	qrCode, err := qr.Encode(qrData, qr.H)
+
+	return qrCode, err
 }
 
 // Return a URL to generate a QRCode on Google Charts for the TOTP, with the given
