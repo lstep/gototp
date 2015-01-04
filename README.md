@@ -11,11 +11,8 @@ gototp is easy to use:
 
 1. Generate a random secret to store for a user:
 ````
-    // Do this somewhere early, and only once
-    rnd := rand.New(rand.NewSource(time.Now().Unix())
-    
     // A secret length of 10 gives a 16 character secret key
-    secret := gototp.RandomSecret(10, rand.New(rand.NewSource(time.Now().Unix())))
+    secret := gototp.RandomSecret(10)
 ````
 
 2.  Create the OTP object:
