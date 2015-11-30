@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"code.google.com/p/rsc/qr"
+	"github.com/GeertJohan/go.qrt"
 )
 
 // Time-based One Time Password
@@ -58,7 +58,7 @@ func (totp *TOTP) Now() int32 {
 // will be valid in the next period (FromNow(1)).
 // This means that every code is therefore valid for 3 * totp.Period.
 func (totp *TOTP) FromNow(periods int64) int32 {
-	period := math.Floor(time.Now().Unix() / int64(totp.Period)) + int64(periods)
+	period := (time.Now().Unix() / int64(totp.Period)) + int64(periods)
 
 	return totp.ForPeriod(period)
 }
@@ -96,9 +96,9 @@ func (totp *TOTP) QRCodeData(label string) string {
 
 // Returns a QR code for the TOTP
 // The QR code has a very high error correction level
-func (totp *TOTP) QRCode(label string) (*qr.Code, error) {
+func (totp *TOTP) QRCodeTerminal(label string) (string, error) {
 	qrData := totp.QRCodeData(label)
-	qrCode, err := qr.Encode(qrData, qr.H)
+	qrCode, err := qrt.Generate(qrData)
 
 	return qrCode, err
 }
