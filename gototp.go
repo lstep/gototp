@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/GeertJohan/go.qrt"
+	qrt "github.com/shelwinnn/go.qrt"
 )
 
 // Time-based One Time Password
